@@ -12,7 +12,7 @@ import io.ktor.routing.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 
-import ocwebserver.extensions.bold
+import ocwebserver.extensions.formatHTML
 
 fun main(args: Array<String>) {
     val server = embeddedServer(
@@ -33,7 +33,7 @@ fun Application.mymodule() {
     routing {
         get("/") {
             var bienVenue : String = "Welcome to OpenClassrooms brand new server !"
-            bienVenue =bienVenue.bold()
+            bienVenue =bienVenue.formatHTML()
 //            println(bienVenue)
             call.respondText(bienVenue, ContentType.Text.Html)
         }
