@@ -11,8 +11,9 @@ import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
-
-import ocwebserver.extensions.formatHTML
+import ocwebserver.extensions.alignCenter
+import ocwebserver.extensions.bold
+import ocwebserver.extensions.decoHTML
 
 fun main(args: Array<String>) {
     val server = embeddedServer(
@@ -31,26 +32,34 @@ fun Application.mymodule() {
         }
     }
     routing {
+        val listeCours = listOf<Cours>(
+            Cours(1, "How to troll", 5, true),
+            Cours(2, "Kotlin for troll", 1, true),
+            Cours(3, "Ktor the troll", 3)
+        )
         get("/") {
             var bienVenue : String = "Welcome to OpenClassrooms brand new server !"
-            bienVenue =bienVenue.formatHTML()
+            bienVenue = bienVenue.decoHTML(alignCenter).decoHTML(bold)
             call.respondText(bienVenue, ContentType.Text.Html)
         }
         get("/course/top") {
-            call.respond(Cours(1, "How to troll", 5, true))
+            val cours:Cours? = listeCours.maxBy { it.level }
+            cours?.let { call.respond(it) }     // Si un cours est trouvé => affichage de son json
+            call.respond(Message())             // sinon affichage du json du message d'erreur
         }
         get("course/{id}") {
 
-            val num = call.parameters["id"]
+            val id = call.parameters["id"]?.toInt()
 
-            val cours : Any = when(num) {
-                "1" -> Cours(1, "How to troll", 5, true)
-                "2" -> Cours(2, "Kotlin for troll", 1, true)
-                "3" -> Cours(3, "Ktor the troll", 3)
-                else -> Message()
-            }
-
-            call.respond(cours)
+//            val cours : Any = when(num) {
+//                "1" -> Cours(1, "How to troll", 5, true)
+//                "2" -> Cours(2, "Kotlin for troll", 1, true)
+//                "3" -> Cours(3, "Ktor the troll", 3)
+//                else -> Message()
+//            }
+            val cours:Cours? = listeCours.find { it.id == id }
+            cours?.let { call.respond(it) }     // Si l'id du paramètre est dans la liste => affichage du json du cours
+            call.respond(Message())             // sinon affichage du json du message d'erreur
         }
     }
 }

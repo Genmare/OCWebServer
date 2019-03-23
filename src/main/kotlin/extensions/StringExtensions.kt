@@ -1,3 +1,10 @@
 package ocwebserver.extensions
 
-fun String.formatHTML():String = "<p style=\"text-align: center\"><b><u><i>$this</i></u></b></p>"
+val alignCenter = { str:String -> "<p style=\"text-align: center\">$str</p>"}
+val bold = { str:String -> "<b>$str</b>"}
+
+
+fun String.decoHTML(balise: (String) -> String) = balise(this)
+
+//fun String.formatHTML() = decoHTML(alignCenter)
+
