@@ -34,6 +34,7 @@ fun Application.mymodule() {
         get("/") {
             var bienVenue : String = "Welcome to OpenClassrooms brand new server !"
             bienVenue =bienVenue.formatHTML()
+//            println(bienVenue)
             call.respondText(bienVenue, ContentType.Text.Html)
         }
         get("/course/top") {
